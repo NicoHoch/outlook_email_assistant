@@ -8,7 +8,7 @@ import requests
 load_dotenv()
 
 
-class GraphApiClient:
+class AzureGraphApiClient:
     def __init__(self):
         clientId = os.getenv("AZURE_CLIENT_ID")
         TenantId = os.getenv("AZURE_TENANT_ID")
@@ -49,7 +49,6 @@ class GraphApiClient:
 
         if response.status_code == 200:
             emails = response.json()["value"]
-            print(json.dumps(emails, indent=2))
         else:
             print("Error when accessing the Graph API:", response.text)
             emails = []

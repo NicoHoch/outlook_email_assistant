@@ -1,6 +1,10 @@
 import os
 from dotenv import load_dotenv
-from api.graph_api import GraphApiClient
+from api.azure_graph_api import AzureGraphApiClient
+from langgraph.graph import START, StateGraph
+
+from langgraph_graph.setup_langgraph_graph import build_graph
+from models.state import State
 
 
 def main():
@@ -11,11 +15,14 @@ def main():
         print("EMAIL_ACCOUNT environment variable not set.")
         return
 
-    graphClient = GraphApiClient()
+    graphClient = AzureGraphApiClient()
     emails = graphClient.get_unread_emails(email_account)
 
+    graph = build_graph()
+
     for email in emails:
-        print(email["subject"])
+        state = State(email=email)
+        graph.invoke(state)
 
 
 if __name__ == "__main__":
