@@ -2,5 +2,8 @@ from models.state import State
 
 
 def download(state: State):
-    print(state["email"]["sentDateTime"])
-    print("Spam email detected!")
+
+    # add contact details to crm
+    # search for contact details online
+    # create follow-up email (if checkbox is checked)
+    return

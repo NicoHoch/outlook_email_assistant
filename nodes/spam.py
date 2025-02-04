@@ -2,5 +2,5 @@ from models.state import State
 
 
 def spam(state: State):
-    print(state["email"]["sentDateTime"])
-    print("Spam email detected!")
+    # move email to spam folder
+    return

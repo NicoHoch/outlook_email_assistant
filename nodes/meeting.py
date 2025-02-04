@@ -2,5 +2,7 @@ from models.state import State
 
 
 def meeting(state: State):
-    print(state["email"]["sentDateTime"])
-    print("Meeting email detected!")
+    # add meeting note template to crm
+    # add meeting to calendar (all calendars)
+    # move email to folder
+    return
