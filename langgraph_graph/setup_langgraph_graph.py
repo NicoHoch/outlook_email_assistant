@@ -1,5 +1,7 @@
 from langgraph.graph import START, END, StateGraph
 from models.state import State
+from nodes.download import download
+from nodes.other import other
 from nodes.meeting import meeting
 from nodes.spam import spam
 from nodes.classify_email import classify_email
@@ -15,6 +17,10 @@ def route_decision(state: State):
         return "spam"
     elif state["decision"] == "meeting":
         return "meeting"
+    elif state["decision"] == "download":
+        return "download"
+    else:
+        return "other"
 
 
 def build_graph() -> StateGraph:
@@ -26,6 +32,8 @@ def build_graph() -> StateGraph:
     router_builder.add_node("extract_email_attachements", extract_email_attachements)
     router_builder.add_node("spam", spam)
     router_builder.add_node("meeting", meeting)
+    router_builder.add_node("download", download)
+    router_builder.add_node("other", other)
     router_builder.add_node("classify_email", classify_email)
 
     # Add edges to connect nodes
@@ -37,11 +45,15 @@ def build_graph() -> StateGraph:
             "invoice": "extract_email_attachements",
             "spam": "spam",
             "meeting": "meeting",
+            "download": "download",
+            "other": "other",
         },
     )
     router_builder.add_edge("extract_email_attachements", END)
     router_builder.add_edge("spam", END)
     router_builder.add_edge("meeting", END)
+    router_builder.add_edge("download", END)
+    router_builder.add_edge("other", END)
 
     # Compile workflow
     graph = router_builder.compile()
