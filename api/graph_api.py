@@ -38,19 +38,19 @@ class GraphApiClient:
                 token_response.get("error_description"),
             )
 
-    def get_unred_emails(self, email_account):
+    def get_unread_emails(self, email_account) -> dict:
 
-        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{email_account}/mailFolders/inbox/messages?$filter=isRead eq false"
+        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{email_account}/messages?$filter=isRead eq false"
 
         headers = {"Authorization": f"Bearer {self.access_token}"}
 
-        # Anfrage an Graph API für ungelesene E-Mails im Posteingang
+        # Anfrage an Graph API für ungelesene E-Mails
         response = requests.get(graphApiEndpoint, headers=headers)
 
         if response.status_code == 200:
-            emails = response.json()
+            emails = response.json()["value"]
             print(json.dumps(emails, indent=2))
         else:
-            print(
-                f"Error when accessing the E-Mails: {response.status_code}, {response.text}"
-            )
+            print("Error when accessing the Graph API:", response.text)
+            emails = []
+        return emails
