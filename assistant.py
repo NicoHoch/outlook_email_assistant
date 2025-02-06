@@ -15,12 +15,13 @@ def main():
         return
 
     graphClient = AzureGraphApiClient()
-    emails = graphClient.get_unread_emails(email_account)
+
+    emails = graphClient.get_unread_emails()
 
     graph = build_graph()
 
     for email in emails:
-        state = State(email=email)
+        state = State(email=email, azureGraphClient=graphClient)
         graph.invoke(state)
 
 

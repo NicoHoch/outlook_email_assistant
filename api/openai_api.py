@@ -14,6 +14,17 @@ class OpenAIClient:
         self.client = OpenAI(api_key=api_key)
 
     def call_openai(self, message, model="gpt-4o-mini", store=True):
+        """
+        Calls the OpenAI API with the given message and model.
+
+        Args:
+            message (str): The message to send to the OpenAI API.
+            model (str, optional): The model to use for the API call. Defaults to "gpt-4o-mini".
+            store (bool, optional): Whether to store the conversation. Defaults to True.
+
+        Returns:
+            str: The response from the OpenAI API, or None if an error occurred.
+        """
         try:
             completion = self.client.chat.completions.create(
                 model=model,
