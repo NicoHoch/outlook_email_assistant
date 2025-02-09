@@ -1,5 +1,6 @@
 from langgraph.graph import START, END, StateGraph
 from models.state import State
+from nodes.append_data_to_table import append_data_to_table
 from nodes.extract_structured_data import extract_structured_data
 from nodes.read_email_attachments import read_email_attachments
 from nodes.download import download
@@ -35,6 +36,7 @@ def build_graph() -> StateGraph:
     router_builder.add_node("extract_email_attachments", extract_email_attachments)
     router_builder.add_node("read_email_attachments", read_email_attachments)
     router_builder.add_node("extract_structured_data", extract_structured_data)
+    router_builder.add_node("append_data_to_table", append_data_to_table)
     router_builder.add_node("spam", spam)
     router_builder.add_node("meeting", meeting)
     router_builder.add_node("download", download)
@@ -55,7 +57,8 @@ def build_graph() -> StateGraph:
     )
     router_builder.add_edge("extract_email_attachments", "read_email_attachments")
     router_builder.add_edge("read_email_attachments", "extract_structured_data")
-    router_builder.add_edge("extract_structured_data", END)
+    router_builder.add_edge("extract_structured_data", "append_data_to_table")
+    router_builder.add_edge("append_data_to_table", END)
     router_builder.add_edge("spam", END)
     router_builder.add_edge("meeting", END)
     router_builder.add_edge("download", END)

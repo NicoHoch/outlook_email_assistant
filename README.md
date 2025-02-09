@@ -30,3 +30,8 @@ This repository provides a workflow for automatically categorizing and processin
 3. Create a new service account or use an existing one.
 4. Assign the necessary roles (e.g., Cloud Vision API User).
 5. Generate a JSON key file, download it, and place it in this project as `keys/google-credentials.json`.
+
+
+### Google Docs Setup
+1. Create the table for expenditure
+2. Share wit with your google service account

@@ -30,6 +30,7 @@ class OpenAIClient:
                 model=model, input=messages, response_format=response_format
             )
             return completion.content
+
         except Exception as e:
             print(f"Fehler bei der API-Anfrage: {e}")
             return None
