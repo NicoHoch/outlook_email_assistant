@@ -9,6 +9,7 @@ from nodes.meeting import meeting
 from nodes.spam import spam
 from nodes.classify_email import classify_email
 from nodes.extract_email_attachments import extract_email_attachments
+from nodes.upload_file_to_drive import upload_file_to_drive
 
 
 # Conditional edge function to route to the appropriate node
@@ -37,6 +38,7 @@ def build_graph() -> StateGraph:
     router_builder.add_node("read_email_attachments", read_email_attachments)
     router_builder.add_node("extract_structured_data", extract_structured_data)
     router_builder.add_node("append_data_to_table", append_data_to_table)
+    router_builder.add_node("save_invoice_to_drive", upload_file_to_drive)
     router_builder.add_node("spam", spam)
     router_builder.add_node("meeting", meeting)
     router_builder.add_node("download", download)
@@ -57,7 +59,8 @@ def build_graph() -> StateGraph:
     )
     router_builder.add_edge("extract_email_attachments", "read_email_attachments")
     router_builder.add_edge("read_email_attachments", "extract_structured_data")
-    router_builder.add_edge("extract_structured_data", "append_data_to_table")
+    router_builder.add_edge("extract_structured_data", "save_invoice_to_drive")
+    router_builder.add_edge("save_invoice_to_drive", "append_data_to_table")
     router_builder.add_edge("append_data_to_table", END)
     router_builder.add_edge("spam", END)
     router_builder.add_edge("meeting", END)

@@ -24,6 +24,7 @@ def append_data_to_table(state: State):
             json_data["products"],
             json_data["vendor_name"],
             json_data["total_price"],
+            attachment["file_link"],
         ]
 
         googleSheetsClient.insert_row(spreadsheet_id, range_name, values)
