@@ -31,7 +31,8 @@ This repository provides a workflow for automatically categorizing and processin
 4. Assign the necessary roles (e.g., Cloud Vision API User).
 5. Generate a JSON key file, download it, and place it in this project as `keys/google-credentials.json`.
 
-
 ### Google Docs Setup
-1. Create the table for expenditure
-2. Share wit with your google service account
+1. Create an invoice folder on Google Drive and get its ID.
+2. Create a table for expenditure within the invoice folder and get its ID.
+3. Share the folder with your Google service account.
+4. Enable Google Drive API and Google Sheets API on your Google Cloud Console
