@@ -1,6 +1,8 @@
 from bs4 import BeautifulSoup
 import re
 
+import fitz
+
 
 def clean_text(text):
     # delete spaces and line breaks
@@ -40,3 +42,15 @@ def get_email_content(msg):
             print(f"Fehler beim Dekodieren des E-Mail-Inhalts: {e}")
 
     return email_content
+
+
+def extract_text_from_pdf(pdf_bytes):
+    """Extracts text from each page of the PDF."""
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    full_text = ""
+
+    for page_num in range(doc.page_count):
+        page = doc.load_page(page_num)
+        full_text += page.get_text()
+
+    return full_text

@@ -1,18 +1,13 @@
 from api.google_vision_ai_api import detect_text_from_image
 from models.state import State
-from api.azure_graph_api import AzureGraphApiClient
 import base64
-import fitz  # PyMuPDF
+
+from service.preprocessing import extract_text_from_pdf  # PyMuPDF
 
 
-def extract_email_attachements(state: State):
-    # dwonload email attachments
+def read_email_attachments(state: State):
 
-    emailId = state["email"]["id"]
-
-    azureGraphClient: AzureGraphApiClient = state["azureGraphClient"]
-
-    attachments = azureGraphClient.list_attachments(emailId)
+    attachments = state["attachments"]
 
     for attachment in attachments:
         mimetype = attachment["contentType"]
@@ -39,21 +34,7 @@ def extract_email_attachements(state: State):
 
             content_str = extract_text_from_pdf(content_bytes)
 
-        print(content_str)
+        # Add content_str to the attachment
+        attachment["contentStr"] = content_str
 
-
-def extract_text_from_pdf(pdf_bytes):
-    """Extracts text from each page of the PDF."""
-    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    full_text = ""
-
-    for page_num in range(doc.page_count):
-        page = doc.load_page(page_num)
-        full_text += page.get_text()
-
-    return full_text
-
-    # read content of invoice
-    # add invoice details to excel file
-    # add invoice to google drve
-    # move email to folder
+    return state

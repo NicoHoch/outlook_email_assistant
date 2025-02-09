@@ -1,7 +1,8 @@
+from typing import TypedDict, List
 from api.azure_graph_api import AzureGraphApiClient
 
 
-class State(dict):
+class State(TypedDict):
     email: dict
     category: str
     attachments: list
