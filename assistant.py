@@ -18,6 +18,15 @@ def main():
 
     emails = graphClient.get_unread_emails()
 
+    if len(emails) == 0:
+        print("No new emails found.")
+        return
+
+    elif len(emails) > 10:
+        raise Exception(
+            f"{len(emails)} emails found. Too many emails to process at once."
+        )
+
     graph = build_graph()
 
     for email in emails:

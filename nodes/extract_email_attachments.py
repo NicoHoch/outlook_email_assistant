@@ -11,4 +11,9 @@ def extract_email_attachments(state: State):
 
     attachments = azureGraphClient.list_attachments(emailId)
 
+    if len(attachments) >= 3:
+        raise Exception(
+            "Please check the email account. More than 3 attachments found."
+        )
+
     return {"attachments": attachments}
