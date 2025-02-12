@@ -11,6 +11,7 @@ from nodes.classify_email import classify_email
 from nodes.extract_email_attachments import extract_email_attachments
 from nodes.upload_file_to_drive import upload_file_to_drive
 from nodes.mark_email_as_read import mark_email_as_read
+import os
 
 
 # Conditional edge function to route to the appropriate node
@@ -73,8 +74,9 @@ def build_graph() -> StateGraph:
     # Compile workflow
     graph = router_builder.compile()
 
-    graph_image = graph.get_graph().draw_mermaid_png()
-    with open("docs/graph_image.png", "wb") as f:
-        f.write(graph_image)
+    if os.getenv("ENV") == "dev":
+        graph_image = graph.get_graph().draw_mermaid_png()
+        with open("docs/graph_image.png", "wb") as f:
+            f.write(graph_image)
 
     return graph

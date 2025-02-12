@@ -1,6 +1,7 @@
 import json
 from api.openai_api import OpenAIClient
 from models.state import State
+import logging
 
 
 def extract_structured_data(state: State) -> dict:
@@ -13,6 +14,8 @@ def extract_structured_data(state: State) -> dict:
     Returns:
         dict: A dictionary containing the extracted structured data or error messages.
     """
+
+    logging.info("Extracting structured data")
 
     response_format = {
         "type": "json_schema",

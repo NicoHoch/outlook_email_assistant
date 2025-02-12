@@ -2,4 +2,8 @@
 .venv*
 keys
 local.settings.json
+
+.python_packages
+__pycache__
+.venv-py3.9-assistant
 .vscode

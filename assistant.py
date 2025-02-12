@@ -14,15 +14,17 @@ def main():
     logging.info("Checking E-Mail Account" + email_account)
 
     if not email_account:
-        print("EMAIL_ACCOUNT environment variable not set.")
+        logging.info("EMAIL_ACCOUNT environment variable not set.")
         return
 
     graphClient = AzureGraphApiClient()
+    logging.info("Graph Client initialized")
 
     emails = graphClient.get_unread_emails()
+    logging.info(f"Found {len(emails)} new emails")
 
     if len(emails) == 0:
-        print("No new emails found.")
+        logging.info("No new emails found.")
         return
 
     elif len(emails) > 10:
@@ -31,8 +33,10 @@ def main():
         )
 
     graph = build_graph()
+    logging.info("Graph initialized")
 
     for email in emails:
+        logging.info(f"Processing email {email['subject']}")
         state = State(email=email, azureGraphClient=graphClient)
         graph.invoke(state)
 

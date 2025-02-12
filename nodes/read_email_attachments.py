@@ -2,10 +2,12 @@ from api.google_vision_ai_api import detect_text_from_image
 from models.state import State
 import base64
 
-from service.preprocessing import extract_text_from_pdf  # PyMuPDF
+from service.preprocessing import extract_text_from_pdf
+import logging
 
 
 def read_email_attachments(state: State):
+    logging.info("Reading email attachments")
 
     attachments = state["attachments"]
 
