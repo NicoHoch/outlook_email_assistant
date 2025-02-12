@@ -1,3 +1,5 @@
 .env
 .venv*
 keys
+local.settings.json
+.vscode

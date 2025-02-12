@@ -3,6 +3,7 @@ anthropic==0.45.2
 anyio==4.8.0
 appnope==0.1.4
 asttokens==3.0.0
+azure-functions==1.21.3
 beautifulsoup4==4.12.3
 cachetools==5.5.1
 certifi==2025.1.31

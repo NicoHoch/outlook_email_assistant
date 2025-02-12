@@ -4,11 +4,14 @@ from api.azure_graph_api import AzureGraphApiClient
 
 from langgraph_graph.setup_langgraph_graph import build_graph
 from models.state import State
+import logging
 
 
 def main():
     load_dotenv()
     email_account = os.getenv("EMAIL_ACCOUNT")
+
+    logging.info("Checking E-Mail Account" + email_account)
 
     if not email_account:
         print("EMAIL_ACCOUNT environment variable not set.")
@@ -34,5 +37,6 @@ def main():
         graph.invoke(state)
 
 
-if __name__ == "__main__":
-    main()
+# for debugging
+# if __name__ == "__main__":
+#     main()
