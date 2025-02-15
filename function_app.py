@@ -6,7 +6,7 @@ app = func.FunctionApp()
 
 
 @app.timer_trigger(
-    schedule="*/15 * * * * *",
+    schedule="0 13 * * *",  # This schedule will run once per day at 1 PM
     arg_name="myTimer",
     run_on_startup=False,
     use_monitor=False,

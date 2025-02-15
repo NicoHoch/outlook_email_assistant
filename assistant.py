@@ -28,17 +28,17 @@ def main():
         return
 
     elif len(emails) > 10:
-        raise Exception(
-            f"{len(emails)} emails found. Too many emails to process at once."
-        )
+        logging.info("More than 10 emails found. Skipping processing to save costs.")
+        return
+    else:
+        logging.info(f"Processing {len(emails)} emails")
+        graph = build_graph()
+        logging.info("Graph initialized")
 
-    graph = build_graph()
-    logging.info("Graph initialized")
-
-    for email in emails:
-        logging.info(f"Processing email {email['subject']}")
-        state = State(email=email, azureGraphClient=graphClient)
-        graph.invoke(state)
+        for email in emails:
+            logging.info(f"Processing email {email['subject']}")
+            state = State(email=email, azureGraphClient=graphClient)
+            graph.invoke(state)
 
 
 # for debugging
