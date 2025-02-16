@@ -46,7 +46,7 @@ class AzureGraphApiClient:
         Returns:
             dict: A dictionary containing the unread emails.
         """
-        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/messages?$filter=isRead eq false"
+        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/mailFolders/Inbox/messages?$filter=isRead eq false"
         headers = {"Authorization": f"Bearer {self.access_token}"}
 
         # Request to Graph API for unread emails
@@ -106,7 +106,7 @@ class AzureGraphApiClient:
             return response.content
         else:
             print("Error when accessing the Graph API:", response.text)
-            return False
+            return None
 
     def mark_email_as_read(self, email_id):
         """
@@ -127,15 +127,18 @@ class AzureGraphApiClient:
 
         payload = {"isRead": "true"}
 
-        response = requests.patch(
-            graphApiEndpoint, headers=headers, data=json.dumps(payload)
-        )
+        try:
+            response = requests.patch(
+                graphApiEndpoint, headers=headers, data=json.dumps(payload)
+            )
 
-        if response.status_code == 200:
-            return True
-        else:
-            print("Error when accessing the Graph API:", response.text)
-            return False
+            if 200 <= response.status_code < 300:
+                return response.json().get("id")
+
+        except Exception as e:
+            print("Exception occurred:", str(e))
+
+        return False
 
     def move_email(self, email_id, dest_folder_name):
         """
@@ -146,7 +149,7 @@ class AzureGraphApiClient:
             dest_folder_name (str): The name of the destination folder.
 
         Returns:
-            bool: True if the email was moved successfully, False otherwise.
+            str: The new email ID if the email was moved successfully, None otherwise.
         """
         # Fetch the folder ID based on the folder name
         folder_id = self.get_folder_id_by_name(dest_folder_name)
@@ -167,10 +170,10 @@ class AzureGraphApiClient:
         )
 
         if 200 <= response.status_code < 300:
-            return True
+            return response.json().get("id")
         else:
             print("Error when accessing the Graph API:", response.text)
-            return False
+            return None
 
     def get_folder_id_by_name(self, folder_name):
         """

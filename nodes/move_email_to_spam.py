@@ -10,10 +10,12 @@ def move_email_to_spam(state: State):
 
     azureGraphClient: AzureGraphApiClient = state["azureGraphClient"]
 
-    result = azureGraphClient.move_email(
+    new_emailId = azureGraphClient.move_email(
         emailId,
         "5. werbung",
     )
-    logging.info(result)
 
-    return
+    if new_emailId:
+        state["email"]["id"] = new_emailId
+
+    return state
