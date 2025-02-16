@@ -1,11 +1,8 @@
 import json
-from dotenv import load_dotenv
+import logging
 import os
 from msal import ConfidentialClientApplication
 import requests
-
-# Lade Umgebungsvariablen
-load_dotenv()
 
 
 class AzureGraphApiClient:
@@ -139,3 +136,63 @@ class AzureGraphApiClient:
         else:
             print("Error when accessing the Graph API:", response.text)
             return False
+
+    def move_email(self, email_id, dest_folder_name):
+        """
+        Moves an email to a specified folder.
+
+        Args:
+            email_id (str): The ID of the email to move.
+            dest_folder_name (str): The name of the destination folder.
+
+        Returns:
+            bool: True if the email was moved successfully, False otherwise.
+        """
+        # Fetch the folder ID based on the folder name
+        folder_id = self.get_folder_id_by_name(dest_folder_name)
+        if not folder_id:
+            print(f"Error: Folder '{dest_folder_name}' not found.")
+            return False
+
+        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/messages/{email_id}/move"
+        headers = {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {"destinationId": folder_id}
+
+        response = requests.post(
+            graphApiEndpoint, headers=headers, data=json.dumps(payload)
+        )
+
+        if 200 <= response.status_code < 300:
+            return True
+        else:
+            print("Error when accessing the Graph API:", response.text)
+            return False
+
+    def get_folder_id_by_name(self, folder_name):
+        """
+        Fetches the folder ID based on the folder name.
+
+        Args:
+            folder_name (str): The name of the folder.
+
+        Returns:
+            str: The ID of the folder if found, None otherwise.
+        """
+        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/mailFolders/Inbox/childFolders"
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+
+        response = requests.get(graphApiEndpoint, headers=headers)
+
+        if response.status_code == 200:
+            folders = response.json().get("value", [])
+            for folder in folders:
+                if folder.get("displayName") == folder_name:
+                    return folder.get("id")
+        else:
+            print("Error when accessing the Graph API:", response.text)
+
+        return None

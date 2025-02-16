@@ -1,10 +1,7 @@
 from api.google_sheets_api import GoogleSheetsAPI
 from models.state import State
 import os
-from dotenv import load_dotenv
 import logging
-
-load_dotenv()
 
 
 def append_data_to_table(state: State):

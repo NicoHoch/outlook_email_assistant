@@ -1,11 +1,8 @@
 from api.google_drive_api import GoogleDriveAPI
 from models.state import State
 import os
-from dotenv import load_dotenv
 import base64
 import logging
-
-load_dotenv()
 
 
 def upload_file_to_drive(state: State):

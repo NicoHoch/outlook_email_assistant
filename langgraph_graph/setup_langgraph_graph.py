@@ -6,11 +6,11 @@ from nodes.read_email_attachments import read_email_attachments
 from nodes.download import download
 from nodes.other import other
 from nodes.meeting import meeting
-from nodes.spam import spam
 from nodes.classify_email import classify_email
 from nodes.extract_email_attachments import extract_email_attachments
 from nodes.upload_file_to_drive import upload_file_to_drive
 from nodes.mark_email_as_read import mark_email_as_read
+from nodes.move_email_to_spam import move_email_to_spam
 import os
 
 
@@ -19,8 +19,8 @@ def route_decision(state: State):
     # Return the node name you want to visit next
     if state["decision"] == "invoice":
         return "invoice"
-    elif state["decision"] == "spam":
-        return "spam"
+    elif state["decision"] == "advertisement":
+        return "advertisement"
     elif state["decision"] == "meeting":
         return "meeting"
     elif state["decision"] == "download":
@@ -42,7 +42,7 @@ def build_graph() -> StateGraph:
     router_builder.add_node("append_data_to_table", append_data_to_table)
     router_builder.add_node("save_invoice_to_drive", upload_file_to_drive)
     router_builder.add_node("mark_email_as_read", mark_email_as_read)
-    router_builder.add_node("spam", spam)
+    router_builder.add_node("move_email_to_spam", move_email_to_spam)
     router_builder.add_node("meeting", meeting)
     router_builder.add_node("download", download)
     router_builder.add_node("other", other)
@@ -54,7 +54,7 @@ def build_graph() -> StateGraph:
         route_decision,
         {  # Name returned by route_decision : Name of next node to visit
             "invoice": "extract_email_attachments",
-            "spam": "spam",
+            "advertisement": "move_email_to_spam",
             "meeting": "meeting",
             "download": "download",
             "other": "other",
@@ -65,8 +65,8 @@ def build_graph() -> StateGraph:
     router_builder.add_edge("extract_structured_data", "save_invoice_to_drive")
     router_builder.add_edge("save_invoice_to_drive", "append_data_to_table")
     router_builder.add_edge("append_data_to_table", "mark_email_as_read")
+    router_builder.add_edge("move_email_to_spam", "mark_email_as_read")
     router_builder.add_edge("mark_email_as_read", END)
-    router_builder.add_edge("spam", END)
     router_builder.add_edge("meeting", END)
     router_builder.add_edge("download", END)
     router_builder.add_edge("other", END)

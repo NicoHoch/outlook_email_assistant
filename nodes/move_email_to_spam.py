@@ -3,15 +3,17 @@ from api.azure_graph_api import AzureGraphApiClient
 import logging
 
 
-def mark_email_as_read(state: State):
-    logging.info("Marking email as read")
+def move_email_to_spam(state: State):
+    logging.info("Moving E-Mail to folder: werbung")
 
     emailId = state["email"]["id"]
 
     azureGraphClient: AzureGraphApiClient = state["azureGraphClient"]
 
-    result = azureGraphClient.mark_email_as_read(emailId)
-
+    result = azureGraphClient.move_email(
+        emailId,
+        "5. werbung",
+    )
     logging.info(result)
 
     return

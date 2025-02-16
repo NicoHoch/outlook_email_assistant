@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 from api.azure_graph_api import AzureGraphApiClient
 
 from langgraph_graph.setup_langgraph_graph import build_graph
@@ -8,7 +7,6 @@ import logging
 
 
 def main():
-    load_dotenv()
     email_account = os.getenv("EMAIL_ACCOUNT")
 
     logging.info("Checking E-Mail Account" + email_account)
@@ -39,8 +37,3 @@ def main():
             logging.info(f"Processing email {email['subject']}")
             state = State(email=email, azureGraphClient=graphClient)
             graph.invoke(state)
-
-
-# for debugging
-# if __name__ == "__main__":
-#     main()
