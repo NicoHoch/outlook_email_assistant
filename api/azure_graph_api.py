@@ -125,7 +125,7 @@ class AzureGraphApiClient:
             "Content-Type": "application/json",
         }
 
-        payload = {"isRead": "true"}
+        payload = {"isRead": True}
 
         try:
             response = requests.patch(
@@ -199,3 +199,35 @@ class AzureGraphApiClient:
             print("Error when accessing the Graph API:", response.text)
 
         return None
+
+    def mark_email_as_processed(self, email_id):
+        """
+        Marks an email as read for the specified email account and email ID.
+
+        Args:
+            email_account (str): The email account to mark the email as read.
+            email_id (str): The ID of the email to mark as read.
+
+        Returns:
+            bool: True if the email was marked as read successfully, False otherwise.
+        """
+        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/messages/{email_id}"
+        headers = {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {"categories": ["processed"]}
+
+        try:
+            response = requests.patch(
+                graphApiEndpoint, headers=headers, data=json.dumps(payload)
+            )
+
+            if 200 <= response.status_code < 300:
+                return response.json().get("id")
+
+        except Exception as e:
+            print("Exception occurred:", str(e))
+
+        return False
