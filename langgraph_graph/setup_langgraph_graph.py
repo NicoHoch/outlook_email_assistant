@@ -67,11 +67,13 @@ def build_graph() -> StateGraph:
     router_builder.add_edge("append_data_to_table", "mark_email_as_read")
 
     router_builder.add_edge("move_email_to_spam", "mark_email_as_read")
-    router_builder.add_edge("mark_email_as_read", "mark_email_as_processed")
 
-    router_builder.add_edge("other", "mark_email_as_processed")
+    router_builder.add_edge("other", "mark_email_as_read")
+
+    router_builder.add_edge("move_email_to_leads", "mark_email_as_read")
+
+    router_builder.add_edge("mark_email_as_read", "mark_email_as_processed")
     router_builder.add_edge("mark_email_as_processed", END)
-    router_builder.add_edge("move_email_to_leads", END)
 
     # Compile workflow
     graph = router_builder.compile()
