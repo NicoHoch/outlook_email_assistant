@@ -53,4 +53,6 @@ def classify_email(state: State):
 
         result = decision.step
 
-    return {"decision": result}
+    state["category"] = result
+
+    return state

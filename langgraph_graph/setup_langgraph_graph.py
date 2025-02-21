@@ -17,13 +17,13 @@ import os
 # Conditional edge function to route to the appropriate node
 def route_decision(state: State):
     # Return the node name you want to visit next
-    if state["decision"] == "invoice":
+    if state["category"] == "invoice":
         return "invoice"
-    elif state["decision"] == "advertisement":
+    elif state["category"] == "advertisement":
         return "advertisement"
-    elif state["decision"] == "meeting":
+    elif state["category"] == "meeting":
         return "meeting"
-    elif state["decision"] == "download":
+    elif state["category"] == "download":
         return "download"
     else:
         return "other"

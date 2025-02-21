@@ -10,7 +10,7 @@ def mark_email_as_processed(state: State):
 
     azureGraphClient: AzureGraphApiClient = state["azureGraphClient"]
 
-    result = azureGraphClient.mark_email_as_processed(emailId)
+    result = azureGraphClient.mark_email_as_processed(emailId, state["category"])
 
     logging.info(result)
 

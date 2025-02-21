@@ -200,7 +200,7 @@ class AzureGraphApiClient:
 
         return None
 
-    def mark_email_as_processed(self, email_id):
+    def mark_email_as_processed(self, email_id, category):
         """
         Marks an email as read for the specified email account and email ID.
 
@@ -217,7 +217,7 @@ class AzureGraphApiClient:
             "Content-Type": "application/json",
         }
 
-        payload = {"categories": ["processed"]}
+        payload = {"categories": [category]}
 
         try:
             response = requests.patch(
