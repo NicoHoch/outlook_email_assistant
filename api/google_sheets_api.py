@@ -30,3 +30,15 @@ class GoogleSheetsAPI:
         )
         response = request.execute()
         print(f"Row inserted: {response}")
+
+    def read_file(self, spreadsheet_id, range_name):
+        # Read the data from the sheet
+        result = (
+            self.service.spreadsheets()
+            .values()
+            .get(spreadsheetId=spreadsheet_id, range=range_name)
+            .execute()
+        )
+        rows = result.get("values", [])
+        print(f"Data read from sheet: {rows}")
+        return rows

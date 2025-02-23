@@ -231,3 +231,38 @@ class AzureGraphApiClient:
             print("Exception occurred:", str(e))
 
         return False
+
+    def forwardEmail(self, email_id, recipient):
+        """
+        Forwards an email to the specified recipient.
+
+        Args:
+            email_id (str): The ID of the email to forward.
+            recipient (str): The email address of the recipient.
+
+        Returns:
+            bool: True if the email was forwarded successfully, False otherwise.
+        """
+        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/messages/{email_id}/forward"
+        headers = {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "comment": "Forwarded message",
+            "toRecipients": [{"emailAddress": {"address": recipient}}],
+        }
+
+        try:
+            response = requests.post(
+                graphApiEndpoint, headers=headers, data=json.dumps(payload)
+            )
+
+            if 200 <= response.status_code < 300:
+                return True
+
+        except Exception as e:
+            print("Exception occurred:", str(e))
+
+        return False

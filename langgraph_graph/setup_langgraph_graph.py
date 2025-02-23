@@ -1,5 +1,6 @@
 from langgraph.graph import START, END, StateGraph
 from models.state import State
+from nodes.forward_email_to_other_accounts import forward_email_to_other_accounts
 from nodes.mark_email_as_processed import mark_email_as_processed
 from nodes.append_data_to_table import append_data_to_table
 from nodes.extract_structured_data import extract_structured_data
@@ -44,6 +45,9 @@ def build_graph() -> StateGraph:
     router_builder.add_node("mark_email_as_read", mark_email_as_read)
     router_builder.add_node("move_email_to_spam", move_email_to_spam)
     router_builder.add_node("move_email_to_leads", move_email_to_leads)
+    router_builder.add_node(
+        "forward_email_to_other_accounts", forward_email_to_other_accounts
+    )
     router_builder.add_node("other", other)
     router_builder.add_node("mark_email_as_processed", mark_email_as_processed)
 
@@ -55,7 +59,7 @@ def build_graph() -> StateGraph:
         {  # Name returned by route_decision : Name of next node to visit
             "invoice": "extract_email_attachments",
             "advertisement": "move_email_to_spam",
-            "meeting": "move_email_to_leads",
+            "meeting": "forward_email_to_other_accounts",
             "download": "move_email_to_leads",
             "other": "other",
         },
@@ -70,6 +74,7 @@ def build_graph() -> StateGraph:
 
     router_builder.add_edge("other", "mark_email_as_read")
 
+    router_builder.add_edge("forward_email_to_other_accounts", "move_email_to_leads")
     router_builder.add_edge("move_email_to_leads", "mark_email_as_read")
 
     router_builder.add_edge("mark_email_as_read", "mark_email_as_processed")
