@@ -3,6 +3,7 @@ import logging
 import os
 from msal import ConfidentialClientApplication
 import requests
+from datetime import datetime, timedelta
 
 
 class AzureGraphApiClient:
@@ -47,6 +48,34 @@ class AzureGraphApiClient:
             dict: A dictionary containing the unread emails.
         """
         graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/mailFolders/Inbox/messages?$filter=isRead eq false"
+        headers = {"Authorization": f"Bearer {self.access_token}"}
+
+        # Request to Graph API for unread emails
+        response = requests.get(graphApiEndpoint, headers=headers)
+
+        if response.status_code == 200:
+            emails = response.json().get("value", [])
+        else:
+            print("Error when accessing the Graph API:", response.text)
+            emails = []
+
+        return emails
+
+    def get_mails_last_24h(self) -> dict:
+        """
+        Fetches unread emails for the specified email account.
+
+        Args:
+            email_account (str): The email account to fetch unread emails from.
+
+        Returns:
+            dict: A dictionary containing the unread emails.
+        """
+        # Calculate the time 24 hours ago from now
+        time_24_hours_ago = (datetime.utcnow() - timedelta(hours=24)).isoformat() + "Z"
+
+        # Graph API endpoint to get emails from the last 24 hours
+        graphApiEndpoint = f"https://graph.microsoft.com/v1.0/users/{self.email_account}/messages?$filter=receivedDateTime ge {time_24_hours_ago} and from/emailAddress/address ne '{self.email_account}'"
         headers = {"Authorization": f"Bearer {self.access_token}"}
 
         # Request to Graph API for unread emails
@@ -252,6 +281,57 @@ class AzureGraphApiClient:
         payload = {
             "comment": "Forwarded message",
             "toRecipients": [{"emailAddress": {"address": recipient}}],
+        }
+
+        try:
+            response = requests.post(
+                graphApiEndpoint, headers=headers, data=json.dumps(payload)
+            )
+
+            if 200 <= response.status_code < 300:
+                return True
+
+        except Exception as e:
+            print("Exception occurred:", str(e))
+
+        return False
+
+    def send_email(self, recipient, content, subject):
+        """
+        Sends an email to the specified recipient.
+
+        Args:
+            recipient (str): The email address of the recipient.
+            content (str): The content of the email.
+            subject (str): The subject of the email.
+
+        Returns:
+            bool: True if the email was sent successfully, False otherwise.
+        """
+        graphApiEndpoint = (
+            f"https://graph.microsoft.com/v1.0/users/{self.email_account}/sendMail"
+        )
+        headers = {
+            "Authorization": f"Bearer {self.access_token}",
+            "Content-Type": "application/json",
+        }
+
+        payload = {
+            "message": {
+                "subject": subject,
+                "body": {
+                    "contentType": "Text",
+                    "content": content,
+                },
+                "toRecipients": [
+                    {
+                        "emailAddress": {
+                            "address": recipient,
+                        }
+                    }
+                ],
+            },
+            "saveToSentItems": "true",
         }
 
         try:

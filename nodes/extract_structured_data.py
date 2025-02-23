@@ -46,7 +46,7 @@ def extract_structured_data(state: State) -> dict:
 
         openai_client = OpenAIClient()
 
-        result = openai_client.call_openai(
+        result = openai_client.call_openai_with_response_format(
             messages, model="gpt-4o-mini", response_format=response_format
         )
 

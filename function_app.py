@@ -1,12 +1,12 @@
 import logging
 import azure.functions as func
-from assistant import main
+from assistant import main_email_handler, main_summarizer
 
 app = func.FunctionApp()
 
 
 @app.timer_trigger(
-    schedule="*/10 * * * * *",  # This schedule will run every 10 seconds
+    schedule="0 */2 * * *",
     arg_name="myTimer",
     run_on_startup=False,
     use_monitor=False,
@@ -17,14 +17,14 @@ def check_emails(myTimer: func.TimerRequest) -> None:
 
     logging.info("Python timer trigger function executed.")
 
-    main()
+    main_email_handler()
 
 
-# @app.timer_trigger(
-#     schedule="0 18,6 * * *",  # This schedule will run every day at 6 AM and 6 PM
-#     arg_name="myTimer",
-#     run_on_startup=False,
-#     use_monitor=False,
-# )
-# def send_summary(myTimer: func.TimerRequest) -> None:
-#     print("summary")
+@app.timer_trigger(
+    schedule="0 6,18 * * *",
+    arg_name="myTimer",
+    run_on_startup=False,
+    use_monitor=False,
+)
+def send_summary(myTimer: func.TimerRequest) -> None:
+    main_summarizer()

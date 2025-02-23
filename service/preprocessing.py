@@ -9,39 +9,26 @@ def clean_text(text):
     text = re.sub(r"\s+", " ", text)
     # delete special characters
     text = text.replace("\xa0", " ").replace("\r", "").replace("\n", " ")
+    # delete specific unwanted characters
+    text = re.sub(r"[\u200c\xad͏]", "", text)
     return text.strip()
 
 
-def get_email_content(msg):
-    email_content = ""
-    if msg.is_multipart():
-        for part in msg.walk():
-            if part.get_content_type() in [
-                "text/plain",
-                "text/html",
-            ]:
-                try:
-                    payload = part.get_payload(decode=True).decode(
-                        part.get_content_charset()
-                    )
-                    if part.get_content_type() == "text/html":
-                        soup = BeautifulSoup(payload, "lxml")
-                        raw_text = soup.get_text()
-                        email_content = clean_text(raw_text)
-                    else:
-                        email_content = clean_text(payload)
-                    break
-                except Exception as e:
-                    print(f"Fehler beim Dekodieren des E-Mail-Inhalts: {e}")
+def get_email_content(email):
+
+    if email["body"]["contentType"] == "html":
+        html_body = email["body"]["content"]
+        soup = BeautifulSoup(html_body, "lxml")
+        raw_text = soup.get_text()
+        cleaned_text = clean_text(raw_text)
+
     else:
         try:
-            email_content = msg.get_payload(decode=True).decode(
-                msg.get_content_charset()
-            )
+            cleaned_text = clean_text(email["body"]["content"])
         except Exception as e:
             print(f"Fehler beim Dekodieren des E-Mail-Inhalts: {e}")
 
-    return email_content
+    return cleaned_text
 
 
 def extract_text_from_pdf(pdf_bytes):

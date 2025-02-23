@@ -8,6 +8,7 @@ import logging
 
 def read_email_attachments(state: State):
     logging.info("Reading email attachments")
+    content_str = ""
 
     attachments = state["attachments"]
 
@@ -22,9 +23,11 @@ def read_email_attachments(state: State):
             raise ValueError("No contentBytes found in the attachment!")
 
         if mimetype == "image/jpeg":
-            content_str = detect_text_from_image(content_bytes)
+            content_str += detect_text_from_image(content_bytes)
         elif mimetype == "application/pdf":
-            content_str = extract_text_from_pdf(content_bytes)
+            content_str += extract_text_from_pdf(content_bytes)
+        else:
+            break
 
         if len(content_str) > 10000:
             raise ValueError("Content string is too large to process!")
