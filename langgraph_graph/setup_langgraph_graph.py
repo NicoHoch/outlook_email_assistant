@@ -1,4 +1,5 @@
 from langgraph.graph import START, END, StateGraph
+from nodes.add_lead_to_crm import add_lead_to_crm
 from models.state import State
 from nodes.forward_email_to_other_accounts import forward_email_to_other_accounts
 from nodes.mark_email_as_processed import mark_email_as_processed
@@ -50,6 +51,7 @@ def build_graph() -> StateGraph:
     )
     router_builder.add_node("other", other)
     router_builder.add_node("mark_email_as_processed", mark_email_as_processed)
+    router_builder.add_node("add_lead_to_crm", add_lead_to_crm)
 
     # Add edges to connect nodes
     router_builder.add_edge(START, "classify_email")
@@ -75,6 +77,7 @@ def build_graph() -> StateGraph:
     router_builder.add_edge("other", "mark_email_as_read")
 
     router_builder.add_edge("forward_email_to_other_accounts", "move_email_to_leads")
+    router_builder.add_edge("move_email_to_leads", "add_lead_to_crm")
     router_builder.add_edge("move_email_to_leads", "mark_email_as_read")
 
     router_builder.add_edge("mark_email_as_read", "mark_email_as_processed")
