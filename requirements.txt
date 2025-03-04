@@ -51,6 +51,7 @@ matplotlib-inline==0.1.7
 msal==1.31.1
 msgpack==1.1.0
 nest-asyncio==1.6.0
+notion-client==2.3.0
 oauthlib==3.2.2
 openai==1.61.0
 orjson==3.10.15

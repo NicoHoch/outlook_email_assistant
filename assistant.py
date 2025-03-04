@@ -45,6 +45,7 @@ def main_email_handler():
 def main_summarizer():
     summary_final = ""
     email_account = os.getenv("EMAIL_ACCOUNT")
+    notification_email = os.getenv("NOTIFICATION_EMAIL")
 
     logging.info("Checking E-Mail Account" + email_account)
 
@@ -78,7 +79,7 @@ def main_summarizer():
             )
 
     result = graphClient.send_email(
-        "nico.hoch1@web.de", summary_final, "Today's summary"
+        notification_email, summary_final, "Today's summary"
     )
 
     return result
