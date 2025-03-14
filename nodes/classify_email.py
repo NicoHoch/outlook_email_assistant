@@ -34,14 +34,14 @@ def classify_email(state: State):
     else:
 
         sysMessage = SystemMessage(
-            content="""Be my personal E-Mail Routing assistant. Your job is to look at the email subject, the sender and the has_attachment flag to classify the mail as invoice, spam, or other.
-                        invoice - the email subject indicates the email to contain an invoice. This is the case if the subject contains 'invoice', 'Rechnung' or 'Rechnungsnummer' and the email has an attachment.
+            content="""Be my personal E-Mail Routing assistant. Your job is to look at the email subject and the sender to classify the mail as invoice, spam, or other.
+                        invoice - the email subject indicates the email to contain an invoice. This is the case if the subject contains 'invoice', 'Rechnung' or 'Rechnungsnummer'.
                         advertisement - the email indicates a newsletter or advertisement email from a company. It's always this class if the email contains emojis or a strong advertisment language promising discounts or offers. Example subjects: No Custom Email Domain? Let's Change That! ✏️, Make your Menti presentation even better 💪
-                        other - the email is neither an invoice nor advertisement. It may be a personal email or a notification.
+                        other - the email is neither an invoice nor advertisement.
                     """,
         )
         humanMessage = HumanMessage(
-            content=f"subject: {state['email']['subject']}; sender: {state['email']['sender']['emailAddress']['address']}; has_attachment: {state['email']['hasAttachments']}"
+            content=f"subject: {state['email']['subject']}; sender: {state['email']['sender']['emailAddress']['address']}"
         )
         # Run the augmented LLM with structured output to serve as routing logic
         decision = router.invoke(
