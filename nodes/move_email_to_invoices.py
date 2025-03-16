@@ -4,7 +4,7 @@ import logging
 
 
 def move_email_to_invoices(state: State):
-    logging.info("Moving E-Mail to folder: werbung")
+    logging.info("Moving E-Mail to folder: rechnungen")
 
     emailId = state["email"]["id"]
 

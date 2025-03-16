@@ -5,6 +5,7 @@ from nodes.forward_email_to_other_accounts import forward_email_to_other_account
 from nodes.mark_email_as_processed import mark_email_as_processed
 from nodes.append_data_to_table import append_data_to_table
 from nodes.extract_structured_data import extract_structured_data
+from nodes.move_email_to_invoices import move_email_to_invoices
 from nodes.move_email_to_leads import move_email_to_leads
 from nodes.read_email_attachments import read_email_attachments
 from nodes.other import other
@@ -42,6 +43,7 @@ def build_graph() -> StateGraph:
     router_builder.add_node("read_email_attachments", read_email_attachments)
     router_builder.add_node("extract_structured_data", extract_structured_data)
     router_builder.add_node("append_data_to_table", append_data_to_table)
+    router_builder.add_node("move_email_to_invoices", move_email_to_invoices)
     router_builder.add_node("save_invoice_to_drive", upload_file_to_drive)
     router_builder.add_node("mark_email_as_read", mark_email_as_read)
     router_builder.add_node("move_email_to_spam", move_email_to_spam)
@@ -70,7 +72,8 @@ def build_graph() -> StateGraph:
     router_builder.add_edge("read_email_attachments", "extract_structured_data")
     router_builder.add_edge("extract_structured_data", "save_invoice_to_drive")
     router_builder.add_edge("save_invoice_to_drive", "append_data_to_table")
-    router_builder.add_edge("append_data_to_table", "mark_email_as_read")
+    router_builder.add_edge("append_data_to_table", "move_email_to_invoices")
+    router_builder.add_edge("move_email_to_invoices", "mark_email_as_read")
 
     router_builder.add_edge("move_email_to_spam", "mark_email_as_read")
 
