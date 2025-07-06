@@ -21,7 +21,7 @@ def append_data_to_table(state: State):
         values = [
             state["email"]["receivedDateTime"],
             json_data["invoice_date"],
-            json_data["products"],
+            str(json_data["products"]),
             json_data["vendor_name"],
             json_data["total_price"],
             attachment["file_link"],

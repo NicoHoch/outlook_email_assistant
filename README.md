@@ -8,7 +8,7 @@ This repository provides a workflow for automatically categorizing and processin
 ## Getting Started
 
 ### Prerequisites
-- Python 3.9
+- Python 3.12
 - pip package manager
 
 ### Setup

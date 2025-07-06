@@ -21,7 +21,7 @@ def check_emails(myTimer: func.TimerRequest) -> None:
 
 
 @app.timer_trigger(
-    schedule="0 6,18 * * *",
+    schedule="0 18 * * *",
     arg_name="myTimer",
     run_on_startup=False,
     use_monitor=False,

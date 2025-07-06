@@ -1,4 +1,4 @@
 docs
 local.settings.json
 .env
-.venv-py3.9-assistant
+venv

@@ -21,10 +21,12 @@ def read_email_attachments(state: State):
             content_bytes = base64.b64decode(content_base64)
         else:
             raise ValueError("No contentBytes found in the attachment!")
-
-        if mimetype == "image/jpeg":
+        if mimetype == "image/jpeg" or attachment.get("name", "").endswith(".jpg"):
             content_str += detect_text_from_image(content_bytes)
-        elif mimetype == "application/pdf":
+        # mimetype or attachment.get("name") ends with pdf
+        elif mimetype == "application/pdf" or attachment.get("name", "").endswith(
+            ".pdf"
+        ):
             content_str += extract_text_from_pdf(content_bytes)
         else:
             break
